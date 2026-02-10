@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Регистрация</title>
+</head>
+<body style="font-family: Arial, sans-serif; max-width: 720px; margin: 40px auto;">
+  <h1>Регистрация</h1>
+  <p><a href="/ui/">← назад</a></p>
+
+  <form id="f" style="display:grid; gap:10px; max-width:360px;">
+  <label>Имя <input name="first_name" required /></label>
+  <label>Фамилия <input name="last_name" required /></label>
+
+  <label>Email <input name="email" type="email" required /></label>
+  <label>Пароль <input name="password" type="password" required /></label>
+  <label>Повтор пароля <input name="password2" type="password" required /></label>
+
+  <button type="submit">Зарегистрироваться</button>
+</form>
+
+
+  <pre id="out" style="background:#f4f4f4; padding:12px; border-radius:8px; margin-top:16px;"></pre>
+
+  <script>
+    const f = document.getElementById("f");
+    const out = document.getElementById("out");
+
+    f.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      out.textContent = "Sending...";
+
+      const data = Object.fromEntries(new FormData(f).entries());
+
+      const r = await fetch("/api/auth/register", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const text = await r.text();
+      out.textContent = `HTTP ${r.status}\n${text}`;
+    });
+  </script>
+</body>
+</html>
